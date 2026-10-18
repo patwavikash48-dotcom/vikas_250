@@ -2,6 +2,8 @@
 
 **Created by Vikas Patwa.**
 
+Also included: **Camera to Bokeh** and **Camera to ZDefocus** focus-link tools. See [Camera Tools documentation](CAMERA_TOOLS.md) for installation and use.
+
 One colour-adjustment node with exposure in stops, Grade, Saturation, ColorLookup colour matching, and an optional mask. All controls are on one **Colour** tab, with the creator credit at the bottom.
 
 **Processing order:** Exposure → Grade → Saturation → ColorLookup → masked blend.
@@ -27,7 +29,7 @@ You can also copy the entire text of `ColourMix.nk` and paste it into the Node G
 
 ## Install in the Color menu and Tab search
 
-1. Create a folder named **ColourMix** inside your Nuke user folder, and copy `ColourMix.nk`, `ColourMix.gizmo`, and `menu.py` into it:
+1. Create a folder named **ColourMix** inside your Nuke user folder, and copy `ColourMix.nk`, `ColourMix.gizmo`, `menu.py`, `camera_bokeh.py`, and `camera_zdefocus.py` into it:
 
    | System | Nuke user folder |
    | --- | --- |

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+- Added Camera to Bokeh and Camera to ZDefocus by Vikas Patwa.
+- Added camera-tools installation and usage documentation.
+- Validated animated focus, depth encodings and Bokeh lens links in Nuke 15.2v9.
+
 ## 1.0.0
 
 - Added exposure in stops, Grade, Saturation and ColorLookup colour matching.
