@@ -1,0 +1,113 @@
+Gizmo {
+ name ColourMix
+ tile_color 0x222222ff
+ addUserKnob {20 colour l Colour}
+ addUserKnob {26 info l "" T "Exposure in stops > Grade > Saturation > ColorLookup" +STARTLINE}
+ addUserKnob {7 exposure l "exposure (stops)" t "RGB multiplied by 2 to the power of stops. Use on scene-linear images." R -10 10 +STARTLINE}
+ addUserKnob {7 mix l "overall mix" R 0 1 +STARTLINE}
+ mix 1
+ addUserKnob {26 grade_heading l "" +STARTLINE T "<b>Grade</b>"}
+ addUserKnob {41 grade_blackpoint l "blackpoint" T GradeAdjust.blackpoint +STARTLINE}
+ addUserKnob {41 grade_whitepoint l "whitepoint" T GradeAdjust.whitepoint +STARTLINE}
+ addUserKnob {41 grade_black l "lift" T GradeAdjust.black +STARTLINE}
+ addUserKnob {41 grade_white l "gain" T GradeAdjust.white +STARTLINE}
+ addUserKnob {41 grade_multiply l "multiply" T GradeAdjust.multiply +STARTLINE}
+ addUserKnob {41 grade_offset l "offset" T GradeAdjust.add +STARTLINE}
+ addUserKnob {41 grade_gamma l "gamma" T GradeAdjust.gamma +STARTLINE}
+ addUserKnob {41 grade_black_clamp l "black clamp" T GradeAdjust.black_clamp +STARTLINE}
+ addUserKnob {41 grade_white_clamp l "white clamp" T GradeAdjust.white_clamp +STARTLINE}
+ addUserKnob {41 grade_mix l "grade mix" T GradeAdjust.mix +STARTLINE}
+ addUserKnob {26 saturation_heading l "" +STARTLINE T "<b>Saturation</b>"}
+ addUserKnob {41 saturation l saturation T SaturationAdjust.saturation +STARTLINE}
+ addUserKnob {41 saturation_mode l "luminance math" T SaturationAdjust.mode +STARTLINE}
+ addUserKnob {41 saturation_mix l "saturation mix" T SaturationAdjust.mix +STARTLINE}
+ addUserKnob {26 curves l "" +STARTLINE T "<b>ColorLookup</b>"}
+ addUserKnob {41 lookup_source l source T Curves.source +STARTLINE}
+ addUserKnob {41 lookup_target l target T Curves.target +STARTLINE}
+ addUserKnob {41 lookup_setRGB l "Set RGB" T Curves.setRGB +STARTLINE}
+ addUserKnob {41 lookup_mix l "curve mix" T Curves.mix +STARTLINE}
+ addUserKnob {41 lookup_table l "use precomputed table" T Curves.use_precomputed +STARTLINE}
+ addUserKnob {41 lookup_range l "table range" T Curves.range +STARTLINE}
+ addUserKnob {26 mask_heading l "" +STARTLINE T "<b>Mask</b>"}
+ addUserKnob {6 use_mask l "use mask" t "Connect a mask to the Mask input and enable this. White applies the grade; black preserves the source." +STARTLINE}
+ addUserKnob {41 mask_channel l "mask channel" T MaskedMix.maskChannelMask +STARTLINE}
+ addUserKnob {41 mask_invert l "invert mask" T MaskedMix.invert_mask +STARTLINE}
+ addUserKnob {26 made_by l "" +STARTLINE T "<b>ColourMix</b> &nbsp; Created by <b>Vikas Patwa</b>."}
+}
+ Input {
+  inputs 0
+  name Source
+  xpos 0
+  ypos 0
+ }
+ set original [stack 0]
+ Multiply {
+  channels rgb
+  value {{pow(2,parent.exposure)}}
+  name ExposureStops
+  xpos 0
+  ypos 80
+ }
+ Grade {
+  channels rgb
+  black_clamp false
+  name GradeAdjust
+  xpos 0
+  ypos 150
+ }
+ Saturation {
+  channels rgb
+  name SaturationAdjust
+  xpos 0
+  ypos 190
+ }
+ ColorLookup {
+  channels rgb
+  use_precomputed false
+  name Curves
+  xpos 0
+  ypos 220
+ }
+ set processed [stack 0]
+ push $original
+ Dissolve {
+  inputs 2
+  which {{parent.mix}}
+  name OverallMix
+  xpos 0
+  ypos 300
+ }
+ set unmasked [stack 0]
+ Input {
+  inputs 0
+  name Mask
+  number 1
+  xpos 230
+  ypos 0
+ }
+ push $processed
+ push $original
+ Merge2 {
+  inputs 2+1
+  operation copy
+  output rgb
+  maskChannelMask rgba.alpha
+  mix {{parent.mix}}
+  name MaskedMix
+  xpos 230
+  ypos 300
+ }
+ push $unmasked
+ Switch {
+  inputs 2
+  which {{parent.use_mask}}
+  name MaskToggle
+  xpos 0
+  ypos 340
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 380
+ }
+end_group
